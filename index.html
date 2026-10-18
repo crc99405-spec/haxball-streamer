@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haxball Streamers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070c;
+      --card: rgba(15, 15, 28, 0.85);
+      --accent: #a855f7;
+      --accent2: #22d3ee;
+      --gold: #fbbf24;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: 
+        radial-gradient(ellipse at 15% 15%, rgba(168, 85, 247, 0.22) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 80%, rgba(34, 211, 238, 0.18) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.08) 0%, transparent 60%),
+        #07070c;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(255,255,255,0.45);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+    }
+
+    header {
+      text-align: center;
+      padding: 3.5rem 1.5rem 1.5rem;
+    }
+
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fbbf24, #a855f7, #22d3ee, #f472b6);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientMove 6s ease infinite;
+      letter-spacing: 3px;
+      margin-bottom: 0.6rem;
+    }
+
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(14px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-14px) scale(1.025);
+      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.4);
+    }
+
+    .card.top1 {
+      border: 2px solid transparent;
+      background: 
+        linear-gradient(var(--card), var(--card)) padding-box,
+        linear-gradient(135deg, #fbbf24, #f59e0b, #a855f7, #22d3ee) border-box;
+      box-shadow: 0 0 30px rgba(251, 191, 36, 0.25);
+    }
+
+    .card.top1:hover {
+      box-shadow: 0 0 50px rgba(251, 191, 36, 0.45), 0 25px 50px -12px rgba(168, 85, 247, 0.4);
+    }
+
+    .top-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 20px;
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(251, 191, 36, 0.6); }
+      50% { transform: scale(1.08); box-shadow: 0 0 25px rgba(251, 191, 36, 0.9); }
+    }
+
+    .banner {
+      height: 145px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      animation: bannerGlow 2.8s ease-in-out infinite;
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(7,7,12,0.95));
+    }
+
+    @keyframes bannerGlow {
+      0%, 100% { filter: brightness(1) saturate(1); }
+      50% { filter: brightness(1.25) saturate(1.3); }
+    }
+
+    .card.top1 .banner {
+      animation: bannerGlowGold 2.2s ease-in-out infinite;
+    }
+
+    @keyframes bannerGlowGold {
+      0%, 100% { filter: brightness(1) saturate(1); }
+      50% { filter: brightness(1.3) saturate(1.4) drop-shadow(0 0 12px rgba(251, 191, 36, 0.5)); }
+    }
+
+    .avatar-wrap {
+      position: relative;
+      margin-top: -52px;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      border: 4px solid #07070c;
+      object-fit: cover;
+      box-shadow: 0 0 0 3px var(--accent);
+      transition: transform 0.3s;
+      background: #1a1a2e;
+    }
+
+    .card.top1 .avatar {
+      box-shadow: 0 0 0 3px var(--gold);
+    }
+
+    .card:hover .avatar {
+      transform: scale(1.1);
+    }
+
+    .live-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 72px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 0 14px rgba(239, 68, 68, 0.7);
+      z-index: 4;
+    }
+
+    .live-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .info {
+      padding: 1rem 1.5rem 1.6rem;
+    }
+
+    .name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      animation: nameBlink 1.8s ease-in-out infinite;
+    }
+
+    @keyframes nameBlink {
+      0%, 100% { 
+        color: #f1f5f9;
+        text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+      }
+      50% { 
+        color: #e879f9;
+        text-shadow: 0 0 12px rgba(168, 85, 247, 0.9), 0 0 25px rgba(168, 85, 247, 0.5);
+      }
+    }
+
+    .card.top1 .name {
+      animation: nameBlinkGold 1.6s ease-in-out infinite;
+    }
+
+    @keyframes nameBlinkGold {
+      0%, 100% { 
+        color: #fbbf24;
+        text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+      }
+      50% { 
+        color: #fde68a;
+        text-shadow: 0 0 15px rgba(251, 191, 36, 1), 0 0 30px rgba(251, 191, 36, 0.6);
+      }
+    }
+
+    .game {
+      color: var(--accent2);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.55rem;
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 1.05rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: 1px solid transparent;
+    }
+
+    .btn-twitch {
+      background: rgba(145, 70, 255, 0.18);
+      color: #c4b5fd;
+      border-color: rgba(145, 70, 255, 0.35);
+    }
+    .btn-twitch:hover {
+      background: #9146ff;
+      color: white;
+      box-shadow: 0 0 22px rgba(145, 70, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-kick {
+      background: rgba(83, 252, 24, 0.14);
+      color: #86efac;
+      border-color: rgba(83, 252, 24, 0.35);
+    }
+    .btn-kick:hover {
+      background: #53fc18;
+      color: #0a0a0f;
+      box-shadow: 0 0 22px rgba(83, 252, 24, 0.45);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="particles" id="particles"></div>
+
+  <header>
+    <h1>HAXBALL STREAMERS</h1>
+    <p>Los mejores del futbolito 2D • Comunidad real</p>
+  </header>
+
+  <main class="container">
+
+    <!-- TOP 1 - CHINOCITY -->
+    <article class="card top1">
+      <div class="top-badge">★ TOP 1</div>
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="https://files.kick.com/images/user/44442776/profile_image/conversion/53b73a64-3fb1-473e-b8cf-228f04233ede-fullsize.webp" alt="Chinocity">
+        <div class="live-badge">EN VIVO</div>
+      </div>
+      <div class="info">
+        <h2 class="name">Chinocity</h2>
+        <div class="game">Haxball • Pro Rooms</div>
+        <p class="desc">El #1. Rooms competitivas, skills y mucho humo. El rey del Hax.</p>
+        <div class="links">
+          <a href="https://kick.com/chinocity" class="btn btn-kick" target="_blank">Kick</a>
+          <a href="https://www.twitch.tv/chinocityy" class="btn btn-twitch" target="_blank">Twitch</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- CZERRO -->
+    <article class="card">
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="czerrro.webp" alt="czerro">
+        <div class="live-badge">EN VIVO</div>
+      </div>
+      <div class="info">
+        <h2 class="name">czerro</h2>
+        <div class="game">Haxball • Ranked & Fun</div>
+        <p class="desc">Uno de los más vistos actualmente. Skills y mucho contenido.</p>
+        <div class="links">
+          <a href="https://kick.com/czerro" class="btn btn-kick" target="_blank">Kick</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- BECKEN82 -->
+    <article class="card">
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8b?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="becken.webp" alt="becken82">
+      </div>
+      <div class="info">
+        <h2 class="name">becken82</h2>
+        <div class="game">Haxball • HaxARG</div>
+        <p class="desc">Streamer clave de la comunidad argentina. Torneos y streams diarios.</p>
+        <div class="links">
+          <a href="https://kick.com/becken82" class="btn btn-kick" target="_blank">Kick</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- LUCASPAZO27 -->
+    <article class="card">
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="LucasPazo27.jpeg" alt="LucasPazo27">
+        <div class="live-badge">EN VIVO</div>
+      </div>
+      <div class="info">
+        <h2 class="name">LucasPazo27</h2>
+        <div class="game">Haxball • Ranked</div>
+        <p class="desc">De los más seguidos en Twitch de Haxball en español.</p>
+        <div class="links">
+          <a href="https://www.twitch.tv/lucaspazo27" class="btn btn-twitch" target="_blank">Twitch</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- HAXCOLOFICIAL -->
+    <article class="card">
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="Haxcoloficial.png" alt="Haxcoloficial">
+      </div>
+      <div class="info">
+        <h2 class="name">Haxcoloficial</h2>
+        <div class="game">Haxball • Liga Colombia</div>
+        <p class="desc">Canal oficial de la liga colombiana de Haxball.</p>
+        <div class="links">
+          <a href="https://www.twitch.tv/haxcoloficial" class="btn btn-twitch" target="_blank">Twitch</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- BENJIITA_FER10 -->
+    <article class="card">
+      <div class="banner" style="background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80')"></div>
+      <div class="avatar-wrap">
+        <img class="avatar" src="Benjiita_fer10.png" alt="Benjiita_fer10">
+        <div class="live-badge">EN VIVO</div>
+      </div>
+      <div class="info">
+        <h2 class="name">Benjiita_fer10</h2>
+        <div class="game">Haxball • Variety</div>
+        <p class="desc">Streamer activo de la escena hispana.</p>
+        <div class="links">
+          <a href="https://www.twitch.tv/benjiita_fer10" class="btn btn-twitch" target="_blank">Twitch</a>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer>
+    Comunidad Haxball real • Fotos reales de los perfiles
+  </footer>
+
+  <script>
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 45; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (7 + Math.random() * 14) + 's';
+      p.style.animationDelay = Math.random() * 10 + 's';
+      p.style.opacity = 0.2 + Math.random() * 0.5;
+      p.style.width = p.style.height = (1.5 + Math.random() * 2.5) + 'px';
+      container.appendChild(p);
+    }
+  </script>
+</body>
+</html>
